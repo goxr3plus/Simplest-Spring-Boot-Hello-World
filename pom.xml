@@ -23,7 +23,7 @@
 <distributionManagement>
   <snapshotRepository>
     <id>nexus</id>
-    <url>http://redhat1000.southindia.cloudapp.azure.com:8081/nexus/content/repositories/snapshos</url>
+    <url>http://redhat1000.southindia.cloudapp.azure.com:8081/nexus/content/repositories/snapshots</url>
   </snapshotRepository>
 </distributionManagement>
 	<dependencies>
