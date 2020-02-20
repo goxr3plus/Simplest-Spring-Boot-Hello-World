@@ -19,14 +19,13 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-		</plugins>
+			<plugin>
+        			<groupId>org.apache.maven.plugins</groupId>
+        			<artifactId>maven-war-plugin</artifactId>
+        			<version>3.2.3</version>
+			</plugins>
 	</build>
-<distributionManagement>
-  <snapshotRepository>
-    <id>nexus</id>
-    <url>http://redhat1000.southindia.cloudapp.azure.com:8081/nexus/content/repositories/snapshots</url>
-  </snapshotRepository>
-</distributionManagement>
+
 	<dependencies>
 
 		<dependency>
