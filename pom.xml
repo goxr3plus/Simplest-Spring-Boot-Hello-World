@@ -20,6 +20,12 @@
 			</plugin>
 		</plugins>
 	</build>
+	<distributionManagement>
+  		<snapshotRepository>
+    		<id>snapshots</id>
+    		<url>http://13.127.119.192:8081/nexus/content/repositories/snapshots</url>
+ 		</snapshotRepository>
+	</distributionManagement>
 
 	<dependencies>
 
