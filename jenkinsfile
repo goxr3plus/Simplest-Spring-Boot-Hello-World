@@ -1,0 +1,24 @@
+pipeline{
+	agent any
+	stages{
+
+		stage('Clean Project'){
+			steps {
+			    sh 'echo "Hello world"'
+				sh 'cd Simplest-Spring-Boot-Hello-World/  && mvn clean'
+			}
+		}
+		stage('Build Project'){
+			steps {
+				sh 'cd Simplest-Spring-Boot-Hello-World/  && mvn install'
+			}
+		}
+		stage('start the projectt'){
+			steps {
+			    withEnv(['JENKINS_NODE_COOKIE=dontkill']) {
+			        sh 'cd Simplest-Spring-Boot-Hello-World/  && nohup java -jar target/example.smallest-0.0.1-SNAPSHOT.jar &>/dev/null &'
+			    }
+			}
+		}
+	}
+}
