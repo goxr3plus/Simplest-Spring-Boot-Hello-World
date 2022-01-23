@@ -1,10 +1,9 @@
 
 name: GitHub Actions before 
 
-
-on: 
-  pull_reqeust: 
-    branches: 
+on:
+  pull_request:
+    branches:
       - master
 
 jobs:
@@ -14,5 +13,5 @@ jobs:
     steps:
     - name: Print a greeting
       run: |
-	hostname 
+        hostname 
 
