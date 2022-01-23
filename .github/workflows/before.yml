@@ -1,4 +1,5 @@
 # 修改hostname
+# test
 name: GitHub Actions before 
 
 on:
