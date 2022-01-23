@@ -1,5 +1,7 @@
 # 修改hostname
 # test 3
+# on push 
+# add code review
 name: GitHub Actions before 
 
 on:
