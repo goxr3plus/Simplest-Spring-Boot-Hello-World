@@ -2,6 +2,8 @@
 
 ### 问题1
 
+#### 文件
+parselog.py
 #### 分析 
 
 设备名称: (deviceName)    BBAOMACBOOKAIR2
