@@ -1,0 +1,11 @@
+attrs==21.4.0
+aws-cdk-lib==2.8.0
+cattrs==1.0.0
+constructs==10.0.37
+importlib-resources==5.4.0
+jsii==1.52.1
+publication==0.0.3
+python-dateutil==2.8.2
+six==1.16.0
+typing_extensions==4.0.1
+zipp==3.6.0
