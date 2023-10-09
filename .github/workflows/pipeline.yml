@@ -84,12 +84,14 @@ jobs:
           aws-region: us-west-2
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - run: go mod download
+        working-directory: infra
       - uses: pulumi/actions@v3
         with:
           command: "up -y"
           stack-name: dev
           comment-on-pr: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          work-dir: infra
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
