@@ -45,7 +45,9 @@ func main() {
 		}
 
 		// An ALB to serve the container endpoint to the internet
-		loadbalancer, err := lbx.NewApplicationLoadBalancer(ctx, "loadbalancer", nil)
+		loadbalancer, err := lbx.NewApplicationLoadBalancer(ctx, "loadbalancer", &lbx.ApplicationLoadBalancerArgs{
+			DefaultTargetGroupPort: pulumi.Int(9092),
+		})
 		if err != nil {
 			return err
 		}
