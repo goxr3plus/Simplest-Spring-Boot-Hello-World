@@ -14,7 +14,7 @@ on:
       - "master" 
 
 env:
-  REGISTRY: ghcr.io
+  REGISTRY: ghcr.io/owenchenxy
   IMAGE_NAME: example-hello-world
   
 jobs:
