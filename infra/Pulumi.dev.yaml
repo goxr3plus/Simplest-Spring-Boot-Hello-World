@@ -1,6 +1,0 @@
-config:
-  aws:region: us-west-2
-  my-container-service:containerPort: "9092"
-  my-container-service:cpu: "512"
-  my-container-service:imageUri: "ghcr.io/owenchenxy/example-hello-world:9"
-  my-container-service:memory: "512"
