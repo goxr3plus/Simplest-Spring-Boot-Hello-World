@@ -87,7 +87,7 @@ jobs:
       - run: go mod download
         working-directory: infra
       - run: |
-          sed -i "s/{{imageUri}}/${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}/g" Pulumi.${{ env.DEFAULT_STACK_NAME }}.yaml
+          sed -i "s|{{imageUri}}|${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}|g" Pulumi.${{ env.DEFAULT_STACK_NAME }}.yaml
         working-directory: infra
       - uses: pulumi/actions@v3
         with:
