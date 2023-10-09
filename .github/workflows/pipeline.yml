@@ -12,11 +12,18 @@ on:
   push:
     branches: 
       - "master" 
-
+  workflow_dispatch:
+    inputs:
+      stack-name:
+        description: 'stack name to be deployed'
+        required: true
+        default: 'dev'
 env:
   REGISTRY: ghcr.io/owenchenxy
   IMAGE_NAME: example-hello-world
-  
+
+
+
 jobs:
   mvn_build:
     runs-on: ubuntu-latest
@@ -85,10 +92,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - run: go mod download
         working-directory: infra
+      - run: |
+          sed -i "s/{{imageUri}}/${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}/g" Pulumi.${{ github.event.inputs.stack-name }}.yaml
+        working-directory: infra
       - uses: pulumi/actions@v3
         with:
           command: "up"
-          stack-name: dev
+          stack-name: ${{ github.event.inputs.stack-name }}
           work-dir: infra
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
