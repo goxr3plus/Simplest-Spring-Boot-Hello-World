@@ -87,7 +87,7 @@ jobs:
         working-directory: infra
       - uses: pulumi/actions@v3
         with:
-          command: "up -y"
+          command: "up"
           stack-name: dev
           comment-on-pr: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
