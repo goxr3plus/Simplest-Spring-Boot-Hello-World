@@ -17,6 +17,9 @@ env:
   REGISTRY: ghcr.io/owenchenxy
   IMAGE_NAME: example-hello-world
   DEFAULT_STACK_NAME: dev
+  TASK_DEFINITION: CdkStackTaskDefinition
+  SERVICE_NAME: MyFargateService
+  CLUSTER_NAME: MyCluster
 
 jobs:
   mvn_build:
@@ -67,7 +70,7 @@ jobs:
           context: .
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
-  deploy:
+  deploy_by_cdk:
     needs: dockerize
     runs-on: ubuntu-latest
     steps:
@@ -75,25 +78,59 @@ jobs:
         with:
           repository: owenchenxy/infra
           path: infra
-      - uses: actions/setup-go@v3
-        with:
-          go-version: '1.21'
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-region: us-west-2
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - run: go mod download
-        working-directory: infra
       - run: |
-          sed -i "s|{{imageUri}}|${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}|g" Pulumi.${{ env.DEFAULT_STACK_NAME }}.yaml
+          aws ecs describe-task-definition \
+            --task-definition ${{ env.TASK_DEFINITION }} \
+            | jq '.taskDefinition | {family, containerDefinitions, taskRoleArn, executionRoleArn, networkMode, requiresCompatibilities, cpu, memory}' \
+            > task-definition-template.json
         working-directory: infra
-      - uses: pulumi/actions@v3
+      - name: Render Amazon ECS task definition
+        id: render-web-container
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          command: "up"
-          stack-name: ${{ env.DEFAULT_STACK_NAME }}
-          work-dir: infra
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          task-definition: infra/task-definition-template.json
+          container-name: web
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
+          environment-variables: "LOG_LEVEL=info"
+      - name: Deploy to Amazon ECS service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-web-container.outputs.task-definition }}
+          service: MyFargateService
+          cluster: MyCluster
+  # deploy_by_pulumi:
+  #   needs: dockerize
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         repository: owenchenxy/infra
+  #         path: infra
+  #     - uses: actions/setup-go@v3
+  #       with:
+  #         go-version: '1.21'
+  #     - name: Configure AWS Credentials
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-region: us-west-2
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #     - run: go mod download
+  #       working-directory: infra
+  #     - run: |
+  #         sed -i "s|{{imageUri}}|${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}|g" Pulumi.${{ env.DEFAULT_STACK_NAME }}.yaml
+  #       working-directory: infra
+  #     - uses: pulumi/actions@v3
+  #       with:
+  #         command: "up"
+  #         stack-name: ${{ env.DEFAULT_STACK_NAME }}
+  #         work-dir: infra
+  #       env:
+  #         PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
