@@ -16,7 +16,6 @@ on:
 env:
   REGISTRY: ghcr.io/owenchenxy
   IMAGE_NAME: example-hello-world
-  DEFAULT_STACK_NAME: dev
   TASK_DEFINITION: CdkStackTaskDefinition
   SERVICE_NAME: MyFargateService
   CLUSTER_NAME: MyCluster
@@ -104,8 +103,8 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.render-web-container.outputs.task-definition }}
-          service: MyFargateService
-          cluster: MyCluster
+          service: ${{ env.SERVICE_NAME }}
+          cluster: ${{ env.CLUSTER_NAME }}
   # deploy_by_pulumi:
   #   needs: dockerize
   #   runs-on: ubuntu-latest
