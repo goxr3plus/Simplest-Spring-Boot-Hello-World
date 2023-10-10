@@ -16,6 +16,6 @@ public class WelcomeController {
 		
 		
 		
-		return "Hello FUCKING World!!!"; //"application/json" mean this is a text not a redirect
+		return "Hello FUCKING World!!!\n {{imageUri}}"; //"application/json" mean this is a text not a redirect
 	}
 }

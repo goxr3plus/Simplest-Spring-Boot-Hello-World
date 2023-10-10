@@ -33,6 +33,8 @@ jobs:
           java-version: '8'
           distribution: 'temurin'
           cache: maven
+      - run: |
+          sed -i "s|{{imageUri}}|${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}|g" src/main/java/example/smallest/controllers/WelcomeController.java
       - name: Build with Maven
         run: mvn -B package --file pom.xml -Dmaven.compiler.source=1.8 -Dmaven.compiler.target=1.8
       - run: |
